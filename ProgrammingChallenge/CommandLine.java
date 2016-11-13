@@ -1,3 +1,5 @@
+import java.io.*;
+
 public class CommandLine {
   // -f files.txt
   final static String OPTION_INPUT_FILE = "-f";	
@@ -7,29 +9,86 @@ public class CommandLine {
   final static String OPTION_OUTPUT = "-o";
   // -h 
   final static String OPTION_HELP = "-h";
+  
+  final static String USAGE = "Usage:\n-f filename: Input file for files. Required.\n-n filename: Input files for nodes. Required.\n-o filename: Output file. If this option is not given, assume standard output\n-h: Print usage information to standard error and stop";
 
+  final static String STATE_NORMAL = "";
+  final static String STATE_FILE = OPTION_INPUT_FILE;
+  final static String STATE_NODE = OPTION_INPUT_NODE;
+  final static String STATE_OUTPUT = OPTION_OUTPUT;
+  
+  BufferedReader inputFileBuffer;
+  BufferedReader inputNodeBuffer;
+  BufferedWriter outputBuffer;
 
+  private static void printError(String errorMessage) {
+    System.err.println("Error: " + errorMessage + "\n" + USAGE);
+  }
+  
+  /* Determine if the arg is an invalid flag or the -h flag. */
+  private static boolean inspect(String arg) { 
+    switch(arg) {
+      case OPTION_INPUT_FILE:
+        break; 
+      case OPTION_INPUT_NODE: 
+        break;
+      case OPTION_OUTPUT:
+        break;
+      case OPTION_HELP:
+        System.out.println(USAGE);
+        return false;
+      default:
+        printError("Invalid argument is given: " + arg); 
+        return false;
+    }
+    return true;
+  }
 
+  /* An ad hoc state machine to parse command line arguments */
   public boolean parse(String args[]) {
-    String inputFile = "", inputNode = "", outputResult = "";
-    boolean helpFlag = false;
+    String flag = STATE_NORMAL;
+    String inputFile = "", inputNode = "", outputFile = "";
     for(int i = 0 ; i < args.length; i++) {
-      System.out.println(args[i]);
-      switch(args[i]) {
-        case OPTION_INPUT_FILE:
-          inputFile = args[++i];
+      // Set state.
+      switch(flag) {
+        case STATE_NORMAL: 
+          if(!inspect(args[i])) 
+            return false; 
+          else
+            flag = args[i];
           break;
-        case OPTION_INPUT_NODE: 
-          inputNode = args[++i];
+        case STATE_FILE:
+          inputFile = args[i]; 
+          flag = STATE_NORMAL;
           break;
-        case OPTION_OUTPUT:
-          outputResult = args[++i];  
-        case OPTION_HELP:
-          helpFlag = true;
+        case STATE_NODE: 
+          inputNode = args[i];
+          flag = STATE_NORMAL;
+          break;
+        case STATE_OUTPUT: 
+          outputFile = args[i];
+          flag = STATE_NORMAL; 
           break;
       }
     }
-    System.out.println(inputFile + " " + inputNode + " " + outputResult + " " + helpFlag); 
+    if(flag != STATE_NORMAL) {
+      printError("The argument for " + flag + " is not provided");
+      return false;
+    }
+    else if(inputFile.length() == 0 || inputNode.length() == 0) {
+      printError("Must provide the -f filename and -n filename parameters.");
+      return false;
+    }
+
+    try {    
+      inputFileBuffer = new BufferedReader(new FileReader(inputFile));  
+      inputNodeBuffer = new BufferedReader(new FileReader(inputNode));  
+      outputBuffer = new BufferedWriter(
+        (outputFile.length() > 0 ? new FileWriter(outputFile) : new FileWriter(FileDescriptor.out))
+      );
+    } catch(IOException ioe) {
+      printError(ioe.toString());
+    }
     return true;
   }
 }
