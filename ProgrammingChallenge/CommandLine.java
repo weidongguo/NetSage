@@ -38,18 +38,18 @@ public class CommandLine {
         System.out.println(USAGE);
         return false;
       default:
-        printError("Invalid argument is given: " + arg); 
+        printError("Invalid option is given: " + arg); 
         return false;
     }
     return true;
   }
 
-  /* An ad hoc state machine to parse command line arguments */
+  /* A state machine (Moore model) to parse command line arguments */
   public boolean parse(String args[]) {
     String flag = STATE_NORMAL;
     String inputFile = "", inputNode = "", outputFile = "";
     for(int i = 0 ; i < args.length; i++) {
-      // Set state.
+      // Take action for current state and set next state 
       switch(flag) {
         case STATE_NORMAL: 
           if(!inspect(args[i])) 
@@ -74,8 +74,7 @@ public class CommandLine {
     if(flag != STATE_NORMAL) {
       printError("The argument for " + flag + " is not provided");
       return false;
-    }
-    else if(inputFile.length() == 0 || inputNode.length() == 0) {
+    } else if(inputFile.length() == 0 || inputNode.length() == 0) {
       printError("Must provide the -f filename and -n filename parameters.");
       return false;
     }
@@ -88,6 +87,7 @@ public class CommandLine {
       );
     } catch(IOException ioe) {
       printError(ioe.toString());
+      return false;
     }
     return true;
   }
