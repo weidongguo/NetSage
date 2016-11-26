@@ -25,7 +25,8 @@ public class CommandLine {
     System.err.println("Error: " + errorMessage + "\n" + USAGE);
   }
   
-  /* Determine if the arg is an invalid flag or the -h flag. */
+  /** Determine if the arg is an invalid flag or the -h flag.
+   */
   private static boolean inspect(String arg) { 
     switch(arg) {
       case OPTION_INPUT_FILE:
@@ -44,7 +45,8 @@ public class CommandLine {
     return true;
   }
 
-  /* A state machine (Moore model) to parse command line arguments */
+  /** A state machine (Moore model) to parse command line arguments.
+   */
   public boolean parse(String args[]) {
     String flag = STATE_NORMAL;
     String inputFile = "", inputNode = "", outputFile = "";
@@ -90,5 +92,18 @@ public class CommandLine {
       return false;
     }
     return true;
+  }
+  
+  /**
+   * Close openned input and output buffers.
+   */
+  public void cleanUp() {
+    try { 
+      inputFileBuffer.close();
+      inputNodeBuffer.close();
+      outputBuffer.close();
+    } catch(Exception e) {
+      printError(e.toString()); 
+    }
   }
 }

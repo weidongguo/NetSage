@@ -9,8 +9,8 @@ public class Solution {
       return;
 
     DistributionPlan dp = new DistributionPlan(fp.files, fp.nodes);
-
     dp.balanceDistributedData();
-
+    dp.output(cl.outputBuffer);
+    cl.cleanUp();
   }
 }

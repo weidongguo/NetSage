@@ -8,7 +8,6 @@ public class Node implements Comparable <Node> {
     this.availableSpace = availableSpace;
   }
 
-
   // Methods for Comparable.
   public int compareTo(Node n) {
     return availableSpace - n.availableSpace;
