@@ -40,14 +40,14 @@ public class InputGenerator {
 
     System.out.println("== Nodes ==");
     for(int i = 0 ; i < nNodes; i++) {
-      System.out.println(nodes.get(i));
+      System.out.print("node" + i + " " + nodes.get(i) + "\n");
       nodeWriter.write("node" + i + " " + nodes.get(i) + "\n");
       nodeWriter.flush();
 
     }
     System.out.println("== Files ==");
     for(int i = 0 ; i < nFiles; i++) {
-      System.out.println(files.get(i));
+      System.out.print("file" + i + " " + files.get(i) + "\n");
       fileWriter.write("file" + i + " " + files.get(i) + "\n");
       fileWriter.flush();
     }

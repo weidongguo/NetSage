@@ -14,6 +14,9 @@ public class DistributionPlan {
     this.nodes = nodes;
   }
 
+  /**
+   * Assign node to each files in a way that balances the data distributed to each node.
+   */
   public void balanceDistributedData() {
     Node maxNode = Collections.max(nodes);
     Collections.sort(files);
@@ -27,26 +30,42 @@ public class DistributionPlan {
     int totalFileSize = filteredFiles.stream().mapToInt(
       (file) -> file.size
     ).sum();
-    int averageFileSizePerNode = totalFileSize / nodes.size();
+    int averageFileSize = totalFileSize / nodes.size();
     
-    // First fit algo: not optimal, but fast with good approximation.
-    int fi = 0, ni = 0; 
-    File file; 
+    // First fit algo: not optimal, but fast with good approximation. It also tries to make the usedSpace match the averageFileSize as close as possible.
+    int fi = 0, ni = 0;
+    File file;
     Node node;
     while(fi < filteredFiles.size() && ni < nodes.size()) {
       file = filteredFiles.get(fi);
       node = nodes.get(ni);
       if(file.size <= node.availableSpace &&
-        Math.abs(node.usedSpace + file.size - averageFileSizePerNode) <= Math.abs(node.usedSpace - averageFileSizePerNode)
+        Math.abs(node.usedSpace + file.size - averageFileSize) <= Math.abs(node.usedSpace - averageFileSize)
       ) {
           node.consume(file.size);
-          file.nodeAssigned = node.nodeName;
+          file.assignNode(node);
           fi++;
       } else {
         // Current node cannot consume more files.
         ni++;
       }
     }   
+    // Second pass to assigns remaining files to any nodes that fit.
+    fi = 0; ni = 0;
+    while(fi < filteredFiles.size() && ni < nodes.size()) {
+      file = filteredFiles.get(fi);
+      node = nodes.get(ni);
+      if(file.nodeAssigned.equals(File.NOT_ASSIGNED)) {
+        if(file.size <= node.availableSpace) {
+          node.consume(file.size);
+          file.assignNode(node);
+        } else {
+          ni++;
+        }
+      } else {
+        fi++;
+      }
+    }
   }
 
   /**
@@ -64,7 +83,5 @@ public class DistributionPlan {
     } catch (IOException ioe) {
       System.err.println("Error: " + ioe);
     }
-
   }
-
 }

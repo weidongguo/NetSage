@@ -1,7 +1,7 @@
 import java.util.Comparator;
 
 public class File implements Comparable<File> {
-  final static String NOT_ASSIGNED = "NULL";
+  public final static String NOT_ASSIGNED = "NULL";
 
   public String filename;
   public int size;
@@ -11,6 +11,10 @@ public class File implements Comparable<File> {
     this.filename = filename;
     this.size = size;
     this.nodeAssigned = NOT_ASSIGNED; 
+  }
+
+  public void assignNode(Node node) {
+    nodeAssigned = node.nodeName;
   }
 
   @Override 
