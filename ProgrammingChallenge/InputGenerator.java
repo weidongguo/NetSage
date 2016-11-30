@@ -5,13 +5,13 @@ import java.io.*;
 
 public class InputGenerator {
   private static Random rand = new Random();
-  private static int MAX_N_NODES = 10;
+  private static int MAX_N_NODES = 100;
   private static int MIN_N_NODES = 2;
-  private static int MAX_N_FILES = 10;
+  private static int MAX_N_FILES = MAX_N_NODES;
   private static int MIN_N_FILES = 2;
-  private static int MAX_FILE_SIZE = 50;
+  private static int MAX_FILE_SIZE = 65536;
   private static int MIN_FILE_SIZE = 1;
-  private static int MAX_NODE_SIZE = 50;
+  private static int MAX_NODE_SIZE = MAX_FILE_SIZE;
   private static int MIN_NODE_SIZE = 1;
 
   public static int randInt(int min, int max) {

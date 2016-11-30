@@ -66,6 +66,19 @@ public class DistributionPlan {
         fi++;
       }
     }
+
+    Statistics stat = new Statistics(nodes.stream().map(
+      n -> (double) n.usedSpace
+    ).collect(
+      Collectors.toList()
+    ));
+    System.out.println(stat);
+    /* 
+    for(Node n: nodes) {
+      System.out.println(n.availableSpace + " " +  n.usedSpace);
+    }
+    System.out.println("===");
+    */
   }
 
   /**
