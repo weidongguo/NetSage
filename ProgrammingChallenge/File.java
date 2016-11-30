@@ -13,7 +13,7 @@ public class File implements Comparable<File> {
     this.nodeAssigned = NOT_ASSIGNED; 
   }
 
-  // Methods for Comparable
+  @Override 
   public int compareTo(File f) {
     return size - f.size;
   }
