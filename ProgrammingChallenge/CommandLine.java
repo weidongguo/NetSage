@@ -25,7 +25,8 @@ public class CommandLine {
     System.err.println("Error: " + errorMessage + "\n" + USAGE);
   }
   
-  /** Determine if the arg is an invalid flag or the -h flag.
+  /** 
+   * Determine if the arg is an invalid flag or the -h flag.
    */
   private static boolean inspect(String arg) { 
     switch(arg) {
@@ -45,7 +46,8 @@ public class CommandLine {
     return true;
   }
 
-  /** A state machine (Moore model) to parse command line arguments.
+  /** 
+   * A state machine (Moore model) to parse command line arguments.
    */
   public boolean parse(String args[]) {
     String flag = STATE_NORMAL;
@@ -95,7 +97,7 @@ public class CommandLine {
   }
   
   /**
-   * Close openned input and output buffers.
+   * Close opened input and output buffers.
    */
   public void cleanUp() {
     try { 

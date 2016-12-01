@@ -27,12 +27,11 @@ public class DistributionPlan {
       return file.size <= maxNode.capacity;
     }).collect(Collectors.toList());
 
-    int totalFileSize = filteredFiles.stream().mapToInt(
-      (file) -> file.size
-    ).sum();
-    int averageFileSize = totalFileSize / nodes.size();
-    
-    // First fit algo: not optimal, but fast with good approximation. It also tries to make the usedSpace match the averageFileSize as close as possible.
+    int averageFileSize = filteredFiles.stream().mapToInt(file -> file.size).sum() / nodes.size();
+
+    // First fit algo: not optimal, but fast with good approximation. 
+    // It tries to make the usedSpace match the averageFileSize as close as possible. 
+    // The runtime is O(F+N), where F is the number of files, and N is the number of nodes. 
     int fi = 0, ni = 0;
     File file;
     Node node;
@@ -46,24 +45,21 @@ public class DistributionPlan {
           file.assignNode(node);
           fi++;
       } else {
-        // Current node cannot consume more files.
+        // Current node cannot consume any more files.
         ni++;
       }
     }   
-    // Second pass to assigns remaining files to any nodes that fit.
-    fi = 0; ni = 0;
+    // Assigns remaining files to any nodes that fit.
+    ni = 0;
     while(fi < filteredFiles.size() && ni < nodes.size()) {
       file = filteredFiles.get(fi);
       node = nodes.get(ni);
-      if(file.nodeAssigned.equals(File.NOT_ASSIGNED)) {
-        if(file.size <= node.availableSpace) {
-          node.consume(file.size);
-          file.assignNode(node);
-        } else {
-          ni++;
-        }
-      } else {
+      if(file.size <= node.availableSpace) {
+        node.consume(file.size);
+        file.assignNode(node);
         fi++;
+      } else {
+        ni++;
       }
     }
 

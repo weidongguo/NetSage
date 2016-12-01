@@ -13,6 +13,12 @@ public class Node implements Comparable <Node> {
     this.usedSpace = 0;
   }
 
+  /**
+   * Consumes the available space for the node.
+   * @param space
+   *   The space to be consumed.
+   * @return None.
+   */
   public void consume(int space) {
     availableSpace -= space;
     usedSpace += space;
