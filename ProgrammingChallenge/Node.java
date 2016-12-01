@@ -1,5 +1,8 @@
 import java.util.Comparator;
 
+/**
+ * A structure modeling a node.
+ */
 public class Node implements Comparable <Node> {
   public String nodeName;
   public int availableSpace;

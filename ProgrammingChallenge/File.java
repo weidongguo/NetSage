@@ -1,5 +1,8 @@
 import java.util.Comparator;
 
+/**
+ * A structure modeling a file.
+ */
 public class File implements Comparable<File> {
   public final static String NOT_ASSIGNED = "NULL";
 

@@ -1,5 +1,8 @@
 import java.io.*;
 
+/**
+ * For parsing command line arguments.
+ */
 public class CommandLine {
   // -f files.txt
   final static String OPTION_INPUT_FILE = "-f";	

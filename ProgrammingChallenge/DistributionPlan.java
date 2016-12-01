@@ -1,10 +1,13 @@
+import java.io.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Collections;
 import java.util.Comparator;
-import java.io.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * For distributing files to nodes.
+ */
 public class DistributionPlan {
   private ArrayList<File> files;
   private ArrayList<Node> nodes;
@@ -38,9 +41,11 @@ public class DistributionPlan {
     while(fi < filteredFiles.size() && ni < nodes.size()) {
       file = filteredFiles.get(fi);
       node = nodes.get(ni);
-      if(file.size <= node.availableSpace &&
+      if(
+        file.size <= node.availableSpace &&
         Math.abs(node.usedSpace + file.size - averageFileSize) <= Math.abs(node.usedSpace - averageFileSize)
       ) {
+        // If the file fits in the node and the resulting used space is closer to the average file size than before.
           node.consume(file.size);
           file.assignNode(node);
           fi++;
@@ -50,6 +55,7 @@ public class DistributionPlan {
       }
     }   
     // Assigns remaining files to any nodes that fit.
+    // Going through all the nodes again.
     ni = 0;
     while(fi < filteredFiles.size() && ni < nodes.size()) {
       file = filteredFiles.get(fi);
@@ -62,19 +68,6 @@ public class DistributionPlan {
         ni++;
       }
     }
-
-    Statistics stat = new Statistics(nodes.stream().map(
-      n -> (double) n.usedSpace
-    ).collect(
-      Collectors.toList()
-    ));
-    System.out.println(stat);
-    /* 
-    for(Node n: nodes) {
-      System.out.println(n.availableSpace + " " +  n.usedSpace);
-    }
-    System.out.println("===");
-    */
   }
 
   /**
